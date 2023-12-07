@@ -1,19 +1,62 @@
 import React, { useState } from 'react';
+import { FaFileAudio, FaImage, FaVideo } from 'react-icons/fa';
+import axios from 'axios';
 
 const Blog = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [audio, setAudio] = useState('');
-  const [image, setImage] = useState('');
-  const [video, setVideo] = useState('');
+  const [selectedAudio, setSelectedAudio] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
-  const handleAddMedia = (type) => {
-    // You can implement the logic for adding audio, image, or video here
-    alert(`Add ${type} logic goes here!`);
+  const handleFileChange = (event, type) => {
+    const file = event.target.files[0];
+
+    switch (type) {
+      case 'audio':
+        setSelectedAudio(file);
+        break;
+      case 'image':
+        setSelectedImage(file);
+        break;
+      case 'video':
+        setSelectedVideo(file);
+        break;
+      default:
+        break;
+    }
+
+    // Trigger handleAddMedia function directly when a file is selected
+    handleAddMedia(file, type);
+  };
+
+  const handleAddMedia = async (file, type) => {
+    let selectedFile = file;
+     
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('title', title); // Append title
+      formData.append('description', description);
+       console.log(formData,"ssjsjssjj")
+      try {
+        const response = await axios.post('http://localhost:6000/createTask', formData);
+
+        if (response.status === 200) {
+          alert(`Uploading ${type}: ${selectedFile.name} successful!`);
+        } else {
+          alert(`Error uploading ${type}: ${selectedFile.name}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert(`Error uploading ${type}: ${selectedFile.name}`);
+      }
+    } else {
+      alert(`Please select a ${type} file`);
+    }
   };
 
   const handleSubmit = () => {
-    // You can implement the logic for submitting the blog post here
     alert('Blog post submitted!');
   };
 
@@ -44,16 +87,39 @@ const Blog = () => {
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
       </div>
-      <div className="mb-4">
-        <button className="bg-blue-500 text-white p-2 mr-2" onClick={() => handleAddMedia('audio')}>
-          Add Audio
-        </button>
-        <button className="bg-green-500 text-white p-2 mr-2" onClick={() => handleAddMedia('image')}>
-          Add Image
-        </button>
-        <button className="bg-red-500 text-white p-2" onClick={() => handleAddMedia('video')}>
-          Add Video
-        </button>
+      <div className="mb-4 flex items-center">
+        <label htmlFor="audioFile" className="cursor-pointer mr-4">
+          <FaFileAudio size="2em" color="#3182CE" />
+          <input
+            type="file"
+            id="audioFile"
+            accept="audio/*"
+            className="hidden"
+            onChange={(e) => handleFileChange(e, 'audio')}
+          />
+        </label>
+
+        <label htmlFor="imageFile" className="cursor-pointer mr-4">
+          <FaImage size="2em" color="#38A169" />
+          <input
+            type="file"
+            id="imageFile"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => handleFileChange(e, 'image')}
+          />
+        </label>
+
+        <label htmlFor="videoFile" className="cursor-pointer">
+          <FaVideo size="2em" color="#E53E3E" />
+          <input
+            type="file"
+            id="videoFile"
+            accept="video/*"
+            className="hidden"
+            onChange={(e) => handleFileChange(e, 'video')}
+          />
+        </label>
       </div>
       <button className="bg-indigo-500 text-white p-2" onClick={handleSubmit}>
         Submit
@@ -61,6 +127,5 @@ const Blog = () => {
     </div>
   );
 };
+
 export default Blog;
-
-

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 function Create() {
   const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState('');
+  // const [newTodo, setNewTodo] = useState('');
 
   const focusItem = (index) => {
     setTodos((prevTodos) =>
