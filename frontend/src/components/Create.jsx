@@ -64,6 +64,7 @@ function Create() {
             <i className="mdi mdi-star text-yellow-300 text-3xl leading-none align-bottom"></i> Todos
           </h1>
         </div>
+        
         <div className="mb-10">
           {todos.length ? (
             <ul onClick={defocusItems} className="-mx-1">

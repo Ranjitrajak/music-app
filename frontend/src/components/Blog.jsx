@@ -98,7 +98,6 @@ const Blog = () => {
             onChange={(e) => handleFileChange(e, 'audio')}
           />
         </label>
-
         <label htmlFor="imageFile" className="cursor-pointer mr-4">
           <FaImage size="2em" color="#38A169" />
           <input
